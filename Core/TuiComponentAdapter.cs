@@ -1,3 +1,4 @@
+using BlazorTuiTests.Views;
 using Microsoft.AspNetCore.Components.RenderTree;
 using IComponent = Microsoft.AspNetCore.Components.IComponent;
 
@@ -12,19 +13,21 @@ public class TuiComponentAdapter
         Renderer = renderer;
         Parent = parent;
         _component = component;
+        _closestNativeControl = FindClosestNativeControl(this);
     }
 
     public string Name { get; internal set; } = "TuiComponentAdapter";
 
     public int DeepLevel { get; init; }
 
+    private TuiControlComponentBase _closestNativeControl;
     protected TuiComponentAdapter? Parent { get; private set; }
 
     protected TuiRenderer Renderer { get; private set; }
 
     protected List<TuiComponentAdapter> Children { get; } = [];
 
-    private IComponent _component;
+    private readonly IComponent _component;
 
     public void ApplyEdits(int componentId, ArrayBuilderSegment<RenderTreeEdit> edits, in RenderBatch renderBatch)
     {
@@ -54,6 +57,11 @@ public class TuiComponentAdapter
                 throw new NotImplementedException();
         }
 
+        for (var i = 0; i < renderBatch.DisposedComponentIDs.Count; i++)
+        {
+            Renderer.RemoveComponent(renderBatch.DisposedComponentIDs.Array[i]);
+        }
+
         // Console.WriteLine($" Sibling Index: {edit.SiblingIndex}, Move to sibling idx {edit.MoveToSiblingIndex}");
     }
 
@@ -63,9 +71,9 @@ public class TuiComponentAdapter
         var c = Children[edit.SiblingIndex];
         Children.RemoveAt(edit.SiblingIndex);
 
-        if (_component is TuiControlComponentBase tc && c._component is TuiControlComponentBase tcc)
+        if (c._component is TuiControlComponentBase tcc)
         {
-            tc.RemoveChild(tcc);
+            _closestNativeControl.RemoveChild(tcc);
         }
     }
 
@@ -86,9 +94,9 @@ public class TuiComponentAdapter
                 Children.Insert(edit.SiblingIndex, newC);
                 Renderer.RegisterComponent(r.ComponentId, newC);
 
-                if (_component is TuiControlComponentBase tc && r.Component is TuiControlComponentBase tcc)
+                if (r.Component is TuiControlComponentBase tcc)
                 {
-                    tc.AddChild(tcc);
+                    _closestNativeControl.AddChild(tcc);
                 }
 
                 break;
@@ -115,6 +123,19 @@ public class TuiComponentAdapter
         else
         {
             Children.Insert(edit.SiblingIndex, null!);
+        }
+    }
+
+    private TuiControlComponentBase FindClosestNativeControl(TuiComponentAdapter component)
+    {
+        while (true)
+        {
+            if (component._component is TuiControlComponentBase tcc)
+            {
+                return tcc;
+            }
+
+            component = component.Parent ?? throw new NullReferenceException("Parent is null and there was no Native TUI control found in tree.");
         }
     }
 }

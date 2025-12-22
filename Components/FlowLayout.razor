@@ -1,0 +1,11 @@
+@using BlazorTuiTests.Views
+@inherits BlazorTuiTests.Core.TuiControlComponentBase
+
+@ChildContent
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public override View View { get; } = new FlowLayoutView();
+}

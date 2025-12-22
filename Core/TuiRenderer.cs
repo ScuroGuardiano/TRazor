@@ -1,10 +1,12 @@
 using System.ComponentModel;
 using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.RenderTree;
 using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using IComponent = Microsoft.AspNetCore.Components.IComponent;
+using Window = BlazorTuiTests.Components.Window;
 
 namespace BlazorTuiTests.Core;
 
@@ -13,7 +15,7 @@ public class TuiRenderer : Renderer
 {
     private int? _root;
     private readonly Dictionary<int, TuiComponentAdapter> _components = new();
-    private IApplication _tuiApp;
+    private readonly IApplication _tuiApp;
 
     protected override RendererInfo RendererInfo { get; } = new RendererInfo("TuiRenderer", true);
 
@@ -27,28 +29,43 @@ public class TuiRenderer : Renderer
         _tuiApp = tuiApp;
     }
 
-    public async Task<TComponent> AddRootComponent<TComponent>(Dictionary<string, object>? parameters = null) where TComponent : IComponent
+    public async Task<TRootComponent> StartApplication<TRootComponent>() where TRootComponent : IComponent
     {
         return await Dispatcher.InvokeAsync(async () =>
         {
             if (_root is not null)
             {
-                throw new InvalidOperationException("Root component already exists");
+                throw new InvalidOperationException("Application is already started");
             }
 
-            var c = (TComponent)InstantiateComponent(typeof(TComponent));
-            var cid = AssignRootComponentId(c);
+            var root = (Window)InstantiateComponent(typeof(Window));
+            var cid = AssignRootComponentId(root);
 
-            var cAdapter = new TuiComponentAdapter(this, null, c)
+            var windowAdapter = new TuiComponentAdapter(this, null, root)
             {
-                Name = "Root"
+                Name = "Root Window"
             };
 
-            RegisterComponent(cid, cAdapter);
+            RegisterComponent(cid, windowAdapter);
             _root = cid;
-            await RenderRootComponentAsync(cid,
-                parameters?.Count > 0 ? ParameterView.FromDictionary(parameters) : ParameterView.Empty);
-            return c;
+
+            var parameters = new Dictionary<string, object?>();
+
+
+            var app = (TRootComponent)InstantiateComponent(typeof(TRootComponent));
+
+            parameters["ChildContent"] = (RenderFragment)Rf;
+
+            RenderRootComponentAsync(cid, ParameterView.FromDictionary(parameters));
+            _tuiApp.Run(root.Win);
+
+            return app;
+
+            void Rf(RenderTreeBuilder builder)
+            {
+                builder.OpenComponent(0, typeof(TRootComponent));
+                builder.CloseComponent();
+            }
         });
     }
 

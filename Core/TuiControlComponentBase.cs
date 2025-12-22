@@ -1,13 +1,10 @@
-using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Components;
 using Terminal.Gui.ViewBase;
 
 namespace BlazorTuiTests.Core;
 
-public abstract class TuiControlComponentBase : ComponentBase, IDisposable
+public abstract class TuiControlComponentBase : ComponentBase, ITuiContainer, IDisposable
 {
-    private Exception? _callbackException;
-
     public abstract View View { get; }
 
     [Parameter]
@@ -77,7 +74,6 @@ public abstract class TuiControlComponentBase : ComponentBase, IDisposable
 
     private void HandleException(Exception ex)
     {
-        _callbackException = ex;
         DispatchExceptionAsync(ex);
     }
 }

@@ -16,8 +16,8 @@ var app = builder.Build();
 
 TuiRenderer renderer = app.Services.GetRequiredService<TuiRenderer>();
 Dispatcher dispatcher = app.Services.GetRequiredService<Dispatcher>();
-var appComponent = await renderer.AddRootComponent<App>();
-
 tuiApp.Init();
-tuiApp.Run(appComponent.Window.Win);
+
+await renderer.StartApplication<App>();
+
 tuiApp.Dispose();

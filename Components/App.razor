@@ -1,22 +1,13 @@
-@implements BlazorTuiTests.Core.ITuiApplication
-
-<Window @ref="Window">
-    <TwoLabels/>
-    <Label>@_text</Label>
+<FlowLayout>
+    <Label>Hello, world!</Label>
+    <Label>This is some cool shit</Label>
+    <Button OnClick="@OnTextChange">Click me UwU</Button>
 
     @if (_x)
     {
-        <Label Y="1">General Kenobi!</Label>
+        <Button OnClick="@OnTextChange">Click me aswell, daddy</Button>
     }
-    else
-    {
-        <Label Y="1">Goodbye, world!</Label>
-    }
-
-    <Button @ref="Btn" Y="3" OnClick="@OnTextChange">Change Text</Button>
-    <Button Y="3" X="_secondPos" OnClick="@OnTextChange">Second Btn</Button>
-</Window>
-
+</FlowLayout>
 
 @code {
     private string _text = "Hello, world!";
@@ -46,8 +37,5 @@
     {
         _x = !_x;
         // throw new Exception("XD");
-        StateHasChanged();
     }
-
-    public Window Window { get; set; } = null!;
 }

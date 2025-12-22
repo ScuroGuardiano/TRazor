@@ -9,7 +9,7 @@
     public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
-    public Func<Task>? OnClick { get; set; }
+    public EventCallback OnClick { get; set; }
 
     protected override void OnInitialized()
     {
@@ -26,10 +26,7 @@
 
     private void HandleAccepted(object? obj, CommandEventArgs args)
     {
-        if (OnClick is not null)
-        {
-            HandleEvent(OnClick);
-        }
+        HandleEvent(OnClick.InvokeAsync);
     }
 
     public override View View => _button;
