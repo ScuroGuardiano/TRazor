@@ -1,0 +1,11 @@
+@inherits BlazorTuiTests.Core.TuiControlComponentBase
+
+@ChildContent
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public Terminal.Gui.Views.Window Win { get; } = new ();
+    public override View View => Win;
+}

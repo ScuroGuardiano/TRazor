@@ -1,0 +1,18 @@
+@inherits BlazorTuiTests.Core.TuiControlComponentBase
+@implements BlazorTuiTests.Core.ITuiTextControl
+
+@ChildContent
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public void HandleTextUpdate(string text)
+    {
+        _label.Text = text;
+    }
+
+    private readonly Terminal.Gui.Views.Label _label = new();
+    public override View View => _label;
+}

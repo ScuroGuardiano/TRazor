@@ -1,0 +1,36 @@
+@implements BlazorTuiTests.Core.ITuiTextControl
+@using Terminal.Gui.Input
+@inherits BlazorTuiTests.Core.TuiControlComponentBase
+
+@ChildContent
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public Func<Task>? OnClick { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _button.Accepting += HandleAccepted;
+    }
+
+    public void HandleTextUpdate(string text)
+    {
+        _button.Text = text;
+    }
+
+    private readonly Terminal.Gui.Views.Button _button = new();
+
+    private void HandleAccepted(object? obj, CommandEventArgs args)
+    {
+        if (OnClick is not null)
+        {
+            HandleEvent(OnClick);
+        }
+    }
+
+    public override View View => _button;
+}

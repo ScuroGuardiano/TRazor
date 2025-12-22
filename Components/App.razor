@@ -1,0 +1,53 @@
+@implements BlazorTuiTests.Core.ITuiApplication
+
+<Window @ref="Window">
+    <TwoLabels/>
+    <Label>@_text</Label>
+
+    @if (_x)
+    {
+        <Label Y="1">General Kenobi!</Label>
+    }
+    else
+    {
+        <Label Y="1">Goodbye, world!</Label>
+    }
+
+    <Button @ref="Btn" Y="3" OnClick="@OnTextChange">Change Text</Button>
+    <Button Y="3" X="_secondPos" OnClick="@OnTextChange">Second Btn</Button>
+</Window>
+
+
+@code {
+    private string _text = "Hello, world!";
+    private bool _x = false;
+    private Pos _secondPos = 0;
+    private Button Btn
+    {
+        set
+        {
+            _secondPos = Pos.Right(value.View) + 1;
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await Task.Delay(4000);
+            _text = "Hello there!";
+            _x = true;
+            StateHasChanged();
+        });
+    }
+
+    private async Task OnTextChange()
+    {
+        _x = !_x;
+        // throw new Exception("XD");
+        StateHasChanged();
+    }
+
+    public Window Window { get; set; } = null!;
+}
