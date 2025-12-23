@@ -1,14 +1,13 @@
-using System.ComponentModel;
-using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.Extensions.Logging;
 using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using IComponent = Microsoft.AspNetCore.Components.IComponent;
-using Window = BlazorTuiTests.Components.Window;
+using Window = TRazor.Components.Window;
 
-namespace BlazorTuiTests.Core;
+namespace TRazor.Core;
 
 #pragma warning disable BL0006
 public class TuiRenderer : Renderer

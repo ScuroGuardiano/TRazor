@@ -1,6 +1,6 @@
 using Terminal.Gui.ViewBase;
 
-namespace BlazorTuiTests.Views;
+namespace TRazor.Views;
 
 public interface ITuiViewContainer
 {

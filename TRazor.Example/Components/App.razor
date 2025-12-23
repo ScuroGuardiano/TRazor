@@ -1,0 +1,15 @@
+<FlowLayout>
+    <Label>Hello, there!</Label>
+    <Label>@_text</Label>
+    <Button OnClick="@ChangeText">Zmień tekst</Button>
+</FlowLayout>
+
+@code {
+
+    private string _text = "General Kenobi!";
+
+    private void ChangeText()
+    {
+        _text = "Nie wiem kurde, coś";
+    }
+}

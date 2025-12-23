@@ -1,6 +1,6 @@
-using BlazorTuiTests.Components;
+using TRazor.Components;
 
-namespace BlazorTuiTests.Core;
+namespace TRazor.Core;
 
 public interface ITuiApplication
 {

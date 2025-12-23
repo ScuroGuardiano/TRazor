@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Terminal.Gui.ViewBase;
 
-namespace BlazorTuiTests.Core;
+namespace TRazor.Core;
 
 public abstract class TuiControlComponentBase : ComponentBase, ITuiContainer, IDisposable
 {

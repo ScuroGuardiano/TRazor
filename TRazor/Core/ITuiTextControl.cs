@@ -1,4 +1,4 @@
-namespace BlazorTuiTests.Core;
+namespace TRazor.Core;
 
 public interface ITuiTextControl
 {

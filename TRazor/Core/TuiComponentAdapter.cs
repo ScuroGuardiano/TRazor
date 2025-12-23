@@ -1,8 +1,8 @@
-using BlazorTuiTests.Views;
+using TRazor.Views;
 using Microsoft.AspNetCore.Components.RenderTree;
 using IComponent = Microsoft.AspNetCore.Components.IComponent;
 
-namespace BlazorTuiTests.Core;
+namespace TRazor.Core;
 
 #pragma warning disable BL0006
 
